@@ -1,16 +1,20 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
 const config =  require('./config')
 const FakeDb = require('./fake-db')
 
 const productRoutes = require('./routes/products')
+const userRoutes = require('./routes/users')
 const path = require('path')
+
 
  mongoose.connect(config.DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-//   useFindAndModify: false,
-//   useCreateIndex: true
+  useCreateIndex: true
+  //   useFindAndModify: false,
+
 }).then(
     () => {
         if(process.env.NODE_ENV !=='production'){
@@ -20,9 +24,13 @@ const path = require('path')
     }
 )
 
-const app = express()
+const app = express() 
+app.use(bodyParser.json())
+
 
 app.use('/api/v1/products', productRoutes)
+app.use('/api/v1/users', userRoutes)
+
 
 if(process.env.NODE_ENV ==='production'){
 
